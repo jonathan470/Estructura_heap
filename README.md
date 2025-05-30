@@ -12,7 +12,7 @@ El sistema permite insertar tareas de forma dinámica en el heap, visualizar el 
 
 Instrucciones de ejecución:
 Clona el repositorio desde GitHub y entra en la carpeta del proyecto:
-git clone https://github.com/usuario/repositorio-minheap.git](https://github.com/jonathan470/Estructura_heap.git
+git clone https://github.com/jonathan470/Estructura_heap.git
 cd Estructura_heap
 Asegúrate de tener Node.js instalado en tu computador.
 Ejecuta el archivo con el siguiente comando en la terminal:
