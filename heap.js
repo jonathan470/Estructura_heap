@@ -4,77 +4,103 @@ class Task {
     this.priority = priority;
   }
 }
+
 class MinHeap {
   constructor() {
     this.heap = [];
   }
 
-  insert(task) {
-    this.heap.push(task);
-    this.bubbleUp(this.heap.length - 1);
+  parentIndex(i) {
+    return Math.floor((i - 1) / 2);
   }
 
-  bubbleUp(index) {
-    while (index > 0) {
-      let parentIndex = Math.floor((index - 1) / 2);
-      if (this.heap[index].priority < this.heap[parentIndex].priority) {
-        [this.heap[index], this.heap[parentIndex]] = [this.heap[parentIndex], this.heap[index]];
-        index = parentIndex;
-      } else {
-        break;
-      }
+  leftChildIndex(i) {
+    return 2 * i + 1;
+  }
+
+  rightChildIndex(i) {
+    return 2 * i + 2;
+  }
+
+  insert(task) {
+    this.heap.push(task);
+    let current = this.heap.length - 1;
+
+    while (
+      current > 0 &&
+      this.heap[current].priority < this.heap[this.parentIndex(current)].priority
+    ) {
+      [this.heap[current], this.heap[this.parentIndex(current)]] = [
+        this.heap[this.parentIndex(current)],
+        this.heap[current],
+      ];
+      current = this.parentIndex(current);
     }
   }
 
   extractMin() {
     if (this.heap.length === 0) return null;
+
     const min = this.heap[0];
     const end = this.heap.pop();
+
     if (this.heap.length > 0) {
       this.heap[0] = end;
       this.sinkDown(0);
     }
+
     return min;
-   }
+  }
 
   sinkDown(index) {
-    const length = this.heap.length;
-    const element = this.heap[index];
+    const size = this.heap.length;
 
     while (true) {
-      let left = 2 * index + 1;
-      let right = 2 * index + 2;
+      let left = this.leftChildIndex(index);
+      let right = this.rightChildIndex(index);
       let smallest = index;
 
-      if (left < length && this.heap[left].priority < this.heap[smallest].priority) {
+      if (
+        left < size &&
+        this.heap[left].priority < this.heap[smallest].priority
+      ) {
         smallest = left;
       }
 
-      if (right < length && this.heap[right].priority < this.heap[smallest].priority) {
+      if (
+        right < size &&
+        this.heap[right].priority < this.heap[smallest].priority
+      ) {
         smallest = right;
       }
 
       if (smallest === index) break;
 
-      [this.heap[index], this.heap[smallest]] = [this.heap[smallest], this.heap[index]];
+      [this.heap[index], this.heap[smallest]] = [
+        this.heap[smallest],
+        this.heap[index],
+      ];
       index = smallest;
     }
   }
 
   printHeap() {
-    console.log(this.heap.map(task => `(${task.name}, ${task.priority})`).join(", "));
+    console.log(
+      this.heap.map((task) => `(${task.name}, ${task.priority})`).join(", ")
+    );
   }
 
   printHeapPretty() {
     console.log("Estado actual del heap:");
-    this.heap.forEach(task => console.log(`Tarea: ${task.name}, Prioridad: ${task.priority}`));
+    this.heap.forEach((task) =>
+      console.log(`Tarea: ${task.name}, Prioridad: ${task.priority}`)
+    );
   }
 
   isEmpty() {
     return this.heap.length === 0;
   }
 }
-
 
 function insertRandomTasksToHeap(heap, n, maxPriority = 10) {
   console.log(`Insertando ${n} tareas aleatorias en el heap:\n`);
@@ -97,6 +123,12 @@ function insertRandomTasksToHeap(heap, n, maxPriority = 10) {
     const task = heap.extractMin();
     console.log(`>> Ejecutando: ${task.name} (Prioridad: ${task.priority})`);
   }
+
+  console.log("\nHeap vacío.");
+}
+
+const heap = new MinHeap();
+insertRandomTasksToHeap(heap, 5);
 
   console.log("\nHeap vacío.");
 }
