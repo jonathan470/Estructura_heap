@@ -4,36 +4,51 @@ class Task {
     this.priority = priority;
   }
 }
+
 class MinHeap {
   constructor() {
     this.heap = [];
   }
 
-  insert(task) {
-    this.heap.push(task);
-    this.bubbleUp(this.heap.length - 1);
+  parentIndex(i) {
+    return Math.floor((i - 1) / 2);
   }
 
-  bubbleUp(index) {
-    while (index > 0) {
-      let parentIndex = Math.floor((index - 1) / 2);
-      if (this.heap[index].priority < this.heap[parentIndex].priority) {
-        [this.heap[index], this.heap[parentIndex]] = [this.heap[parentIndex], this.heap[index]];
-        index = parentIndex;
-      } else {
-        break;
-      }
+  leftChildIndex(i) {
+    return 2 * i + 1;
+  }
+
+  rightChildIndex(i) {
+    return 2 * i + 2;
+  }
+
+  insert(task) {
+    this.heap.push(task);
+    let current = this.heap.length - 1;
+
+    while (
+      current > 0 &&
+      this.heap[current].priority < this.heap[this.parentIndex(current)].priority
+    ) {
+      [this.heap[current], this.heap[this.parentIndex(current)]] = [
+        this.heap[this.parentIndex(current)],
+        this.heap[current],
+      ];
+      current = this.parentIndex(current);
     }
   }
 
   extractMin() {
     if (this.heap.length === 0) return null;
+
     const min = this.heap[0];
     const end = this.heap.pop();
+
     if (this.heap.length > 0) {
       this.heap[0] = end;
       this.sinkDown(0);
     }
+
     return min;
   }
 }
